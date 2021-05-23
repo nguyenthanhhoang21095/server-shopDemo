@@ -3,15 +3,15 @@ import mongoose from 'mongoose'
 export const connectDatabase = (): void => {
   mongoose.Promise = require('bluebird')
 
-  mongoose.connect('mongodb://localhost:27017/shopDemo', {
+  mongoose.connect('mongodb://localhost:27017/hoang-shop-web-db', {
     useUnifiedTopology: true,
     useFindAndModify: false,
     useNewUrlParser: true,
     useCreateIndex: true
   })
-  .then(async () => {
-    console.log('Database connection created')
-  }).catch((err) => {
-    console.log(err)
-  })
+    .then(async () => {
+      console.log('Database connection created')
+    }).catch((err) => {
+      console.log(err)
+    })
 }

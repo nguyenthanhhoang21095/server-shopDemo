@@ -1,6 +1,6 @@
 import { defaultModel } from '../common/constants'
 
-export default{
+export default {
   id: defaultModel.number,
   name: defaultModel.string,
   image: defaultModel.string,

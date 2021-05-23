@@ -8,6 +8,8 @@ import ProductRouter from './routes/Product'
 import UserRouter from './routes/User'
 import CartRouter from './routes/Cart'
 import { connectDatabase } from './common/connectDatabase'
+import { graphqlHTTP } from 'express-graphql'
+import Schema from './Schema'
 
 dotenv.config()
 
@@ -20,11 +22,13 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
-connectDatabase();
+connectDatabase()
 
 app.use('/api/product', ProductRouter)
 app.use('/api/user', UserRouter)
 app.use('/api/cart', CartRouter)
+
+app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true }))
 
 http.createServer(app).listen(PORT, () => {
   console.log(`Server listen on port ${PORT}`)
