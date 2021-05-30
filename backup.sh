@@ -1,0 +1,2 @@
+mongodump --host 45.77.252.184 --port 27017 --db hoang-shop-web-db -o ./ -u admin --password admin123
+# mongorestore --host 45.77.252.184 --port 27017 -u admin --p admin123 -d hoang-shop-web-db ./hoang-shop-web-db

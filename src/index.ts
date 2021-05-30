@@ -9,9 +9,19 @@ import UserRouter from './routes/User'
 import CartRouter from './routes/Cart'
 import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
-import Schema from './Schema'
+import Schema from './Schema/product'
 
 dotenv.config()
+
+const CronJob = require('cron').CronJob
+
+const cronjobExample = new CronJob('0 0 0 */1 * *', () => {
+  // Do cronjob in here
+  console.log('active backup db')
+  const exec = require('child_process').exec
+  exec('bash ./backup.sh')
+}, null, true)
+cronjobExample.start()
 
 const PORT: number = parseInt(process.env.PORT as string, 10)
 

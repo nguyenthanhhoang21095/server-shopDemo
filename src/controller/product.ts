@@ -1,7 +1,8 @@
 import { Response, Request } from 'express'
 import { Product } from '../model'
-import { getStorage, saveStorage} from '../common/function'
+import { getStorage, saveStorage } from '../common/function'
 import redis from "redis";
+
 interface ReponseType {
   success: boolean
   data: any
@@ -25,7 +26,7 @@ export default class ProductServices {
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
-      const id: number = parseInt(req.params.id);
+      const id: number = parseInt(req.params.id)
       const payload = await Product.findOne({ id })
       return res.json({ success: true, data: payload })
     } catch (error) {
@@ -38,21 +39,26 @@ export default class ProductServices {
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
+      let prodId: number = 0;
       const {
         id,
         name,
         image,
-        price
+        price,
+        finalPrice
       } = req.body
+      const prodList = await Product.find({});
+      if (prodList.length) prodId = prodList.length;
 
       const payload = await Product.create({
-        id,
+        id: prodId,
         name,
         image,
-        price
+        price,
+        finalPrice
       })
 
-      saveStorage(id, payload);
+      saveStorage(id, payload)
 
       return res.json({ success: true, data: payload })
     } catch (error) {
@@ -77,7 +83,6 @@ export default class ProductServices {
         image,
         price
       })
-      
 
       return res.json({ success: true, data: payload })
     } catch (error) {

@@ -20,11 +20,11 @@ export default class UserServices {
     }
   }
 
- 
-  static async checkAuthUser (
+
+  static async checkAuthUser(
     req: Request,
-    res:  Response<ReponseType>
-  ):Promise<Response<ReponseType>> {
+    res: Response<ReponseType>
+  ): Promise<Response<ReponseType>> {
     try {
       const { account = "", password = "" } = req.body;
 
@@ -33,19 +33,19 @@ export default class UserServices {
           { account }, { password }
         ]
       })
-      if (payload) return res.json({ success: true, data: payload});
-      return res.json({ success: false, data: null})
+      if (payload) return res.json({ success: true, data: payload });
+      return res.json({ success: false, data: null })
     } catch (error) {
       return res.status(500)
     }
   }
-  
-  static async createNewUser(
+
+  static async createNewUser (
     req: Request,
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
-      let userId:number = 0;
+      let userId: number = 0;
       const userList = await User.find({});
       if (userList.length) userId = userList.length;
       const {
@@ -68,7 +68,7 @@ export default class UserServices {
         address,
         isActive: true,
       });
-      
+
       await CartServices.initNewCart(userId);
 
       return res.json({ success: true, data: payload });
