@@ -37,12 +37,12 @@ app.use(express.json())
 connectDatabase()
 
 app.use('/api/auth', AuthRouter);
+app.use('/api/product', ProductRouter)
 
 app.use(authenticateToken, protectedRoute);
 
-app.use('/api/user', UserRouter)
-app.use('/api/product', ProductRouter)
 app.use('/api/cart', CartRouter)
+app.use('/api/user', UserRouter)
 
 app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true }))
 

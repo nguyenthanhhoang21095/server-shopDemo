@@ -42,7 +42,6 @@ export default class ProductServices {
     try {
       let prodId = 0;
       const {
-        id,
         name,
         image,
         price,
