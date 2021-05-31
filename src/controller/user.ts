@@ -1,19 +1,6 @@
 import { Response, Request } from "express";
 import { User } from "../model";
-import CartServices from "../controller/cart";
 import { IUser } from "../interfaces";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-// const handleToken = require("../common/jwtHelper");
-// const {sha256} = require('crypto-hash');
-
-// const ACCESS_TOKEN_LIFE = '1h';
-// const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
-// const REFRESH_TOKEN_LIFE = '365d';
-// const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
-
 interface ReponseType {
   success?: boolean;
   data?: any;
@@ -98,44 +85,7 @@ export default class UserServices {
   //   }
   // }
   
-  static async createNewUser(
-    req: Request,
-    res: Response<ReponseType>
-  ): Promise<Response<ReponseType>> {
-    try {
-      let userId: number = 0;
-      const userList = await User.find({});
-      if (userList.length) userId = userList.length;
-      const {
-        account,
-        password,
-        fullName,
-        phone,
-        address,
-        role = "member",
-      }: IUser = req.body;
-
-      const existUser = await User.findOne({ account });
-      if (existUser) return res.json({ success: false, data: null });
-
-      const payload: any = await User.create({
-        id: userId,
-        account,
-        password,
-        fullName,
-        phone,
-        address,
-        isActive: true,
-        role,
-      });
-
-      await CartServices.initNewCart(userId);
-
-      return res.json({ success: true, data: payload });
-    } catch (error) {
-      return res.status(500);
-    }
-  }
+  
 
   static async put(
     req: Request,
