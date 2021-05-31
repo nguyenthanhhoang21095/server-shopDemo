@@ -32,61 +32,6 @@ export default class UserServices {
     }
   }
 
-  // static async handleLogin(
-  //   req: Request,
-  //   res: Response<ReponseType>
-  // ): Promise<Response<ReponseType>> {
-  //   try {
-  //     const { account = "", password = "" } = req.body;
-
-  //     const payload: any = await User.findOne({
-  //       $and: [
-  //         { account }, { password }
-  //       ]
-  //     })
-      
-  //     if (!payload) {
-  //       return res.status(404);
-  //     }
-
-  //     const userInfoInToken: Partial<IUser> = {
-  //       id: payload.id,
-  //       fullName: payload.fullName,
-  //       account: payload.account
-  //     }
-      
-  //     const hashedAccessToken = await sha256(ACCESS_TOKEN_SECRET);
-  //     const hashedRefreshToken = await sha256(REFRESH_TOKEN_SECRET);
-      
-  //     const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, hashedAccessToken, ACCESS_TOKEN_LIFE);
-  //     const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, hashedRefreshToken, REFRESH_TOKEN_LIFE);
-      
-  //     const responseData = { ...payload, accessToken, refreshToken }
-
-  //     return res.json({ success: true, data: responseData });
-  //   } catch (error) {
-  //     return res.status(500)
-  //   }
-  // }
-
-  // static async refreshToken (
-  //   req: any,
-  //   res: any,
-  // ) {
-  //   try {
-  //     const refreshTokenFromClient = req.body.refreshToken;
-  //     if (!refreshTokenFromClient) return res.status(403).send('No token provided');
-  //     const decoded:any  = await handleToken.verifyAccessToken(refreshTokenFromClient, REFRESH_TOKEN_SECRET);
-  //     const userData = decoded.data;
-  //     const accessToken = await handleToken.generateAccessToken(userData, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
-  //     return res.json({ success: true, data: accessToken }) 
-  //   } catch (error) {
-  //     res.status(403).send('Invalid refresh token.');
-  //   }
-  // }
-  
-  
-
   static async put(
     req: Request,
     res: Response<ReponseType>
@@ -116,17 +61,4 @@ export default class UserServices {
       return res.status(500);
     }
   }
-
-  // static async delete (
-  //   req: Request,
-  //   res: Response<ReponseType>
-  // ): Promise<Response<ReponseType>> {
-  //   try {
-  //     const id: number = parseInt(req.params.id);
-  //     const payload = await User.findOneAndDelete({ id })
-  //     return res.json({ success: true, data: payload })
-  //   } catch (error) {
-  //     return res.status(500)
-  //   }
-  // }
 }
