@@ -7,5 +7,6 @@ export default {
   fullName: defaultModel.string,
   phone: defaultModel.string,
   address: defaultModel.string,
-  isActive: defaultModel.boolean
+  isActive: defaultModel.boolean,
+  role: defaultModel.string,
 }

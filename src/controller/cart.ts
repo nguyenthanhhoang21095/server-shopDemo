@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { Cart } from "../model";
+import { ICart } from '../interfaces'
 interface ReponseType {
   success: boolean;
   data: any;
@@ -12,7 +13,7 @@ export default class CartServices {
   ): Promise<Response<ReponseType>> {
     try {
       const id: number = parseInt(req.params.id);
-      const payload = await Cart.findOne({ id });
+      const payload: any = await Cart.findOne({ id });
       return res.json({ success: true, data: payload });
     } catch (error) {
       return res.status(500);
@@ -21,7 +22,7 @@ export default class CartServices {
 
   static async getCartInfo(id: number) {
     try {
-      const payload = await Cart.find({ id });
+      const payload: any = await Cart.find({ id });
       return payload;
     } catch (error) {
       throw Error("Fail to get cart");
@@ -30,11 +31,11 @@ export default class CartServices {
 
   static async initNewCart(id: number) {
     try {
-      const newCart = {
+      const newCart: ICart = {
         id,
         cart: [],
       };
-      const payload = await Cart.create(newCart);
+      const payload:any = await Cart.create(newCart);
       return payload;
     } catch (error) {
       throw new Error("Cannot create new cart");
@@ -50,9 +51,9 @@ export default class CartServices {
 
       const data: any = await Cart.findOne({ id });
       const cartArr = data.cart;
-      let newCart: any = [];
+      let newCart: ICart[] = [];
       const prodIdx: number = cartArr.findIndex(
-        (elm: any) => elm.id === product.id
+        (elm: ICart) => elm.id === product.id
       );
       
       if (
@@ -85,7 +86,7 @@ export default class CartServices {
         ];
       }
 
-      const payload = await Cart.findOneAndUpdate(
+      const payload: any = await Cart.findOneAndUpdate(
         {
           id,
         },
@@ -101,16 +102,16 @@ export default class CartServices {
     }
   }
 
-  static async deleteCart(
-    req: Request,
-    res: Response<ReponseType>
-  ): Promise<Response<ReponseType>> {
-    try {
-      const id: number = parseInt(req.params.id);
-      const payload = await Cart.findOneAndDelete({ id });
-      return res.json({ success: true, data: payload });
-    } catch (error) {
-      return res.status(500);
-    }
-  }
+  // static async deleteCart(
+  //   req: Request,
+  //   res: Response<ReponseType>
+  // ): Promise<Response<ReponseType>> {
+  //   try {
+  //     const id: number = parseInt(req.params.id);
+  //     const payload: any = await Cart.findOneAndDelete({ id });
+  //     return res.json({ success: true, data: payload });
+  //   } catch (error) {
+  //     return res.status(500);
+  //   }
+  // }
 }

@@ -1,7 +1,8 @@
 import { Response, Request } from 'express'
 import { Product } from '../model'
 import { getStorage, saveStorage } from '../common/function'
-import redis from "redis";
+// import redis from "redis"
+import { IProduct } from '../interfaces'
 
 interface ReponseType {
   success: boolean
@@ -14,7 +15,7 @@ export default class ProductServices {
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
-      const payload = await Product.find({})
+      const payload: any = await Product.find({})
       return res.json({ success: true, data: payload })
     } catch (error) {
       return res.status(500)
@@ -27,7 +28,7 @@ export default class ProductServices {
   ): Promise<Response<ReponseType>> {
     try {
       const id: number = parseInt(req.params.id)
-      const payload = await Product.findOne({ id })
+      const payload: any = await Product.findOne({ id })
       return res.json({ success: true, data: payload })
     } catch (error) {
       return res.status(500)
@@ -39,26 +40,29 @@ export default class ProductServices {
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
-      let prodId: number = 0;
+      let prodId = 0;
       const {
         id,
         name,
         image,
         price,
-        finalPrice
-      } = req.body
-      const prodList = await Product.find({});
+        finalPrice,
+      }: Partial<IProduct> = req.body
+
+      const prodList: any = await Product.find({})
       if (prodList.length) prodId = prodList.length;
 
-      const payload = await Product.create({
+      const payload: any = await Product.create({
         id: prodId,
         name,
         image,
         price,
+        inStock: true,
+        isActive: true,
         finalPrice
       })
 
-      saveStorage(id, payload)
+      // saveStorage(`${id}`, payload)
 
       return res.json({ success: true, data: payload })
     } catch (error) {
@@ -75,13 +79,21 @@ export default class ProductServices {
         id,
         name,
         image,
-        price
-      } = req.body
+        price,
+        finalPrice,
+        percentStar,
+        inStock,
+        isActive
+      }: IProduct = req.body
 
-      const payload = await Product.findOneAndUpdate({ id }, {
+      const payload: any = await Product.findOneAndUpdate({ id }, {
         name,
         image,
-        price
+        price,
+        finalPrice,
+        percentStar,
+        inStock,
+        isActive
       })
 
       return res.json({ success: true, data: payload })
@@ -95,7 +107,10 @@ export default class ProductServices {
     res: Response<ReponseType>
   ): Promise<Response<ReponseType>> {
     try {
-      const payload = await Product.findOneAndDelete({ id: req.params.id })
+      const {
+        id
+      }: Partial<IProduct> = req.body
+      const payload = await Product.findOneAndDelete({ id })
 
       return res.json({ success: true, data: payload })
     } catch (error) {

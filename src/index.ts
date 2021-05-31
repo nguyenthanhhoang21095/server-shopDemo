@@ -7,9 +7,11 @@ import helmet from 'helmet'
 import ProductRouter from './routes/Product'
 import UserRouter from './routes/User'
 import CartRouter from './routes/Cart'
+import AuthRouter from './routes/Auth'
 import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
 import Schema from './Schema/product'
+import { authenticateToken, protectedRoute } from './middlewares/authMiddleware'
 
 dotenv.config()
 
@@ -34,8 +36,12 @@ app.use(express.json())
 
 connectDatabase()
 
-app.use('/api/product', ProductRouter)
+app.use('/api/auth', AuthRouter);
+
+app.use(authenticateToken, protectedRoute);
+
 app.use('/api/user', UserRouter)
+app.use('/api/product', ProductRouter)
 app.use('/api/cart', CartRouter)
 
 app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true }))

@@ -6,10 +6,11 @@ const router = express.Router()
 router.get('/', Services.get)
 router.get('/:id', Services.getById)
 
-router.delete('/', Services.delete)
-
 // Can receive req.body req.query or req.params
 router.post('/', Services.post)
+
 router.put('/', Services.put)
+
+router.delete('/', Services.delete)
 
 export default router

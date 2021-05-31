@@ -8,6 +8,6 @@ router.get('/:id', Services.getById)
 // router.post('/:id', Services.initNewCart)
 router.put('/', Services.updateCart)
 
-router.delete('/:id', Services.deleteCart)
+// router.delete('/:id', Services.deleteCart)
 
 export default router
