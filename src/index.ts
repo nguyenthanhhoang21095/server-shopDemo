@@ -8,6 +8,7 @@ import ProductRouter from './routes/Product'
 import UserRouter from './routes/User'
 import CartRouter from './routes/Cart'
 import AuthRouter from './routes/Auth'
+import OrderRouter from './routes/order'
 import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
 import Schema from './Schema/product'
@@ -38,11 +39,12 @@ connectDatabase()
 
 app.use('/api/auth', AuthRouter);
 app.use('/api/product', ProductRouter)
+app.use('/api/user', UserRouter)
 
 app.use(authenticateToken, protectedRoute);
 
 app.use('/api/cart', CartRouter)
-app.use('/api/user', UserRouter)
+app.use('/api/order', OrderRouter)
 
 app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true }))
 

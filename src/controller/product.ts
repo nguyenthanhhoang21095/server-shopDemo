@@ -1,6 +1,6 @@
 import { Response, Request } from 'express'
 import { Product } from '../model'
-import { getStorage, saveStorage } from '../common/function'
+// import { getStorage, saveStorage } from '../common/function'
 // import redis from "redis"
 import { IProduct } from '../interfaces'
 
@@ -85,7 +85,7 @@ export default class ProductServices {
         isActive
       }: IProduct = req.body
 
-      const payload: any = await Product.findOneAndUpdate({ id }, {
+      await Product.findOneAndUpdate({ id }, {
         name,
         image,
         price,
@@ -94,7 +94,7 @@ export default class ProductServices {
         inStock,
         isActive
       })
-
+      const payload = await Product.find();
       return res.json({ success: true, data: payload })
     } catch (error) {
       return res.status(500)
@@ -109,8 +109,8 @@ export default class ProductServices {
       const {
         id
       }: Partial<IProduct> = req.body
-      const payload = await Product.findOneAndDelete({ id })
-
+      await Product.findOneAndDelete({ id });
+      const payload = await Product.find();
       return res.json({ success: true, data: payload })
     } catch (error) {
       return res.status(500)

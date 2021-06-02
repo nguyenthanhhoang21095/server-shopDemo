@@ -1,11 +1,13 @@
 import Services from '../controller/user'
 import express from 'express'
-
+import { authenticateToken, protectedRoute } from '../middlewares/authMiddleware'
 const router = express.Router()
 
 // Can receive req.query or req.params
 
 router.get('/', Services.getAllUsers)
+
+router.use(authenticateToken, protectedRoute)
 
 router.get('/:id', Services.getUserById)
 

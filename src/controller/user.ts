@@ -47,8 +47,7 @@ export default class UserServices {
         role = "member"
       }: IUser = req.body;
 
-      const payload = await User.findOneAndUpdate({
-        id,
+      await User.findOneAndUpdate({ id }, {
         account,
         password,
         fullName,
@@ -56,6 +55,7 @@ export default class UserServices {
         address,
         role,
       });
+      const payload = await User.find();
       return res.json({ success: true, data: payload });
     } catch (error) {
       return res.status(500);

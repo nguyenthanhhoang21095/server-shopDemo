@@ -9,9 +9,9 @@ dotenv.config();
 const handleToken = require("../common/jwtHelper");
 const handleHashedPassword = require("../common/hashPassword");
 const ACCESS_TOKEN_LIFE = '1h';
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_LIFE = '365d';
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 interface ReponseType {
   success?: boolean;
@@ -27,11 +27,11 @@ export default class AuthServices {
     try {
       const { account = "", password = "" } = req.body;
       const payload: any = await User.findOne({ account });
-      if (!payload) return res.status(400).send("Cannot find user");
+      if (!payload) return res.status(401).send("Cannot find user");
       const isCorrectPass = await handleHashedPassword.checkPassword(password, payload.password);
       
       if (!isCorrectPass) {
-        return res.status(400).send("Invalid password")
+        return res.status(401).send("Invalid password")
       }
 
       const userInfoInToken: Partial<IUser> = {
@@ -40,7 +40,7 @@ export default class AuthServices {
         account: payload.account
       }
       
-      const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+      const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, payload.role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
       const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
       const responseData = { ...payload, accessToken, refreshToken }
@@ -91,7 +91,7 @@ export default class AuthServices {
         account: payload.account
       }
 
-      const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE);
+      const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
       const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
       const responseData = { ...payload, accessToken, refreshToken };
       return res.json({ success: true, data: responseData });
@@ -106,7 +106,7 @@ export default class AuthServices {
   ) {
     try {
       const refreshTokenFromClient = req.body.refreshToken;
-      if (!refreshTokenFromClient) return res.status(403).send('No token provided');
+      if (!refreshTokenFromClient) return res.send('No token provided');
 
       const decoded: any = await handleToken.verifyAccessToken(refreshTokenFromClient, REFRESH_TOKEN_SECRET);
       const userData = decoded.data;

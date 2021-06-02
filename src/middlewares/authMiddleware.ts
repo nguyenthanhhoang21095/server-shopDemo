@@ -1,5 +1,5 @@
 const jwtHelper = require('../common/jwtHelper');
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
+
 
 export const authenticateToken = async (
   req: any,
@@ -9,7 +9,10 @@ export const authenticateToken = async (
   try {
     const authHeader = req.headers['authorization'];
     const tokenCode = authHeader && authHeader.split(' ')[1];
+    
     if (tokenCode == null) return res.status(403).send('No token provided');
+
+    const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     const decoded = await jwtHelper.verifyAccessToken(tokenCode, ACCESS_TOKEN_SECRET);
     req.jwtDecoded = decoded;
     next();
