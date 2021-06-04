@@ -39,11 +39,26 @@ export default class AuthServices {
         fullName: payload.fullName,
         account: payload.account
       }
-      
+
       const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, payload.role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
       const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
 
-      const responseData = { ...payload, accessToken, refreshToken }
+      const resUserData = {
+        id: payload.id,
+        account: payload.account,
+        password: payload.password,
+        fullName: payload.fullName,
+        phone: payload.phone,
+        address: payload.address,
+        isActive: payload.isActive,
+        role: payload.isActive,
+      }
+      const responseData = {
+        ...resUserData,
+        accessToken,
+        refreshToken
+      };
+      console.log(responseData);
 
       return res.json({ success: true, data: responseData });
     } catch (error) {
@@ -93,7 +108,23 @@ export default class AuthServices {
 
       const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
       const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
-      const responseData = { ...payload, accessToken, refreshToken };
+      
+      const resUserData = {
+        id: payload.id,
+        account: payload.account,
+        password: payload.password,
+        fullName: payload.fullName,
+        phone: payload.phone,
+        address: payload.address,
+        isActive: payload.isActive,
+        role: payload.isActive,
+      }
+      const responseData = {
+        ...resUserData,
+        accessToken,
+        refreshToken
+      };
+
       return res.json({ success: true, data: responseData });
     } catch (error) {
       return res.status(500).send("Internal Server Error");
