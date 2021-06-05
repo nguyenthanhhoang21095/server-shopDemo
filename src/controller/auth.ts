@@ -27,6 +27,7 @@ export default class AuthServices {
     try {
       const { account = "", password = "" } = req.body;
       const payload: any = await User.findOne({ account });
+      // Check is exist account
       if (!payload) return res.status(401).send("Cannot find user");
       const isCorrectPass = await handleHashedPassword.checkPassword(password, payload.password);
       
@@ -37,12 +38,13 @@ export default class AuthServices {
       const userInfoInToken: Partial<IUser> = {
         id: payload.id,
         fullName: payload.fullName,
-        account: payload.account
+        account: payload.account,
+        role: payload.role,
       }
 
       const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, payload.role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
       const refreshToken: string = await handleToken.generateAccessToken(userInfoInToken, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE);
-
+     
       const resUserData = {
         id: payload.id,
         account: payload.account,
@@ -51,14 +53,15 @@ export default class AuthServices {
         phone: payload.phone,
         address: payload.address,
         isActive: payload.isActive,
-        role: payload.isActive,
+        role: payload.role,
       }
+    
       const responseData = {
         ...resUserData,
-        accessToken,
         refreshToken
       };
-      console.log(responseData);
+      
+      res.cookie('access_token', accessToken);
 
       return res.json({ success: true, data: responseData });
     } catch (error) {
@@ -103,7 +106,8 @@ export default class AuthServices {
       const userInfoInToken: Partial<IUser> = {
         id: payload.id,
         fullName: payload.fullName,
-        account: payload.account
+        account: payload.account,
+        role: payload.role
       }
 
       const accessToken: string = await handleToken.generateAccessToken(userInfoInToken, ACCESS_TOKEN_SECRET, role === "admin"? "31d" : ACCESS_TOKEN_LIFE);
@@ -117,7 +121,7 @@ export default class AuthServices {
         phone: payload.phone,
         address: payload.address,
         isActive: payload.isActive,
-        role: payload.isActive,
+        role: payload.role,
       }
       const responseData = {
         ...resUserData,

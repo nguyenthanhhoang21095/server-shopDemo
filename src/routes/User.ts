@@ -1,17 +1,15 @@
 import Services from '../controller/user'
 import express from 'express'
-import { authenticateToken, protectedRoute } from '../middlewares/authMiddleware'
+import { checkRoleUser } from '../middlewares/authMiddleware'
 const router = express.Router()
 
 // Can receive req.query or req.params
-
-router.get('/', Services.getAllUsers)
-
-router.use(authenticateToken, protectedRoute)
+router.get('/', checkRoleUser, Services.getAllUsers)
 
 router.get('/:id', Services.getUserById)
 
-router.put('/', Services.put)
+router.put('/', Services.put);
+
 
 // router.delete('/', Services.delete)
 

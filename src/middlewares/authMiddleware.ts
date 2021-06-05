@@ -23,7 +23,19 @@ export const authenticateToken = async (
 
 export const protectedRoute = (req: any, res: any, next: any) => {
   if (req.jwtDecoded) {
-    return next();
+    next();
+    return ;
   }
   res.status(401).send('Unauthorized');
+  return;
+}
+
+export const checkRoleUser = (req: any, res: any, next: any) => {
+  const dataJwt = req.jwtDecoded.data;
+  if (dataJwt?.role === "admin") {
+    next();
+    return;
+  }
+  res.status(403).send(`You don't have permission`);
+  return
 }

@@ -3,11 +3,12 @@ const { sha256 } = require('crypto-hash');
 
 function generateAccessToken(user: Record<string, any>, secretSignature: string, tokenLife = '1h') {
     return new Promise((resolve, reject) => {
-        const { id , fullName, account } = user
+        const { id , fullName, account, role} = user
         const userData = {
             id,
             fullName,
             account,
+            role,
         }
 
         hashedSecretKey(secretSignature).then((hashedKey) => {
