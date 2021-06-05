@@ -61,7 +61,7 @@ export default class AuthServices {
         refreshToken
       };
       
-      res.cookie('access_token', accessToken);
+      res.cookie('access_token', accessToken, { httpOnly: false });
 
       return res.json({ success: true, data: responseData });
     } catch (error) {
