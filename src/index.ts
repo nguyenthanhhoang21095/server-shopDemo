@@ -13,7 +13,7 @@ import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
 import Schema from './Schema/product'
 import { authenticateToken, protectedRoute } from './middlewares/authMiddleware'
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 // const csrf  = require('csurf');
 
 dotenv.config()
@@ -32,14 +32,14 @@ const PORT: number = parseInt(process.env.PORT as string, 10)
 
 const app = express()
 
-app.use(cookieParser())
+// app.use(cookieParser())
 // app.use(csrf({
 //   cookie: true
 // }));
 
 app.use(morgan('dev'))
 app.use(helmet())
-app.use(cors({ origin: true, credentials: true }))
+app.use(cors())
 app.use(express.json())
 
 connectDatabase()

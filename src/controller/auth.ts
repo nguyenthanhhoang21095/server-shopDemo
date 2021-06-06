@@ -58,11 +58,10 @@ export default class AuthServices {
     
       const responseData = {
         ...resUserData,
+        accessToken,
         refreshToken
       };
       
-      res.cookie('access_token', accessToken, { httpOnly: false });
-
       return res.json({ success: true, data: responseData });
     } catch (error) {
       return res.status(500).send("Internal Server Error");
