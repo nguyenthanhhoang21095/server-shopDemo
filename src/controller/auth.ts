@@ -8,6 +8,7 @@ dotenv.config();
 
 const handleToken = require("../common/jwtHelper");
 const handleHashedPassword = require("../common/hashPassword");
+
 const ACCESS_TOKEN_LIFE = '1h';
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_LIFE = '365d';
@@ -29,8 +30,8 @@ export default class AuthServices {
       const payload: any = await User.findOne({ account });
       // Check is exist account
       if (!payload) return res.status(401).send("Cannot find user");
-      const isCorrectPass = await handleHashedPassword.checkPassword(password, payload.password);
-      
+      // const isCorrectPass = await handleHashedPassword.checkPassword(password, payload.password);
+      const  isCorrectPass = password === payload.password;      
       if (!isCorrectPass) {
         return res.status(401).send("Invalid password")
       }
@@ -88,11 +89,11 @@ export default class AuthServices {
       const existUser = await User.findOne({ account });
       if (existUser) return res.json({ success: false, data: null });
 
-      const hashedPass: string = await handleHashedPassword.hashedPassword(password);
+      // const hashedPass: string = await handleHashedPassword.hashedPassword(password);
       const payload: any = await User.create({
         id: userId,
         account,
-        password: hashedPass,
+        password,
         fullName,
         phone,
         address,

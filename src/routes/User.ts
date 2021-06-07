@@ -8,8 +8,7 @@ router.get('/', checkRoleUser, Services.getAllUsers)
 
 router.get('/:id', Services.getUserById)
 
-router.put('/', Services.put);
-
+router.put('/', Services.put)
 
 // router.delete('/', Services.delete)
 

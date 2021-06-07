@@ -48,7 +48,6 @@ export default class CartServices {
   ): Promise<Response<ReponseType>> {
     try {
       const { id, product, action = "increase" } = req.body;
-
       const data: any = await Cart.findOne({ id });
       const cartArr = data.cart;
       let newCart: ICart[] = [];
