@@ -55,14 +55,15 @@ export default class CartServices {
         (elm: ICart) => elm.id === product.id
       );
       
-      if (
-        (action === "decrease" && product.quantity <= 1) || action === "remove"
+      if (prodIdx != -1 && ((action === "decrease" && product.quantity <= 1) || action === "remove")
       ) {
         newCart = [
           ...cartArr.slice(0, prodIdx),
           ...cartArr.slice(prodIdx + 1, cartArr.length),
         ];
+        
       } else if (prodIdx != -1) {
+        
         const quantity =
           action === "decrease"
             ? cartArr[prodIdx].quantity - 1
@@ -84,8 +85,9 @@ export default class CartServices {
           },
         ];
       }
-
-      const payload: any = await Cart.findOneAndUpdate(
+      console.log(newCart);
+      
+      await Cart.findOneAndUpdate(
         {
           id,
         },
@@ -95,6 +97,9 @@ export default class CartServices {
           },
         }
       );
+
+      const payload: any = await Cart.findOne({ id });
+      
       return res.json({ success: true, data: payload });
     } catch (error) {
       return res.status(500);

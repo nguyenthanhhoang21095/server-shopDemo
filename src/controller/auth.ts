@@ -9,7 +9,7 @@ dotenv.config();
 const handleToken = require("../common/jwtHelper");
 const handleHashedPassword = require("../common/hashPassword");
 
-const ACCESS_TOKEN_LIFE = '1h';
+const ACCESS_TOKEN_LIFE = '31d';
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_LIFE = '365d';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
