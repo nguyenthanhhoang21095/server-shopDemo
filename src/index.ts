@@ -11,7 +11,7 @@ import AuthRouter from './routes/Auth'
 import OrderRouter from './routes/Order'
 import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
-import Schema from './Schema/product'
+import ProductSchema from './Schema/product'
 import { authenticateToken, protectedRoute } from './middlewares/authMiddleware'
 // const cookieParser = require('cookie-parser');
 // const csrf  = require('csurf');
@@ -46,14 +46,13 @@ connectDatabase()
 
 app.use('/api/auth', AuthRouter)
 app.use('/api/product', ProductRouter)
+app.use('/api/graphql', graphqlHTTP({ schema: ProductSchema, pretty: true }))
 
 app.use(authenticateToken, protectedRoute)
 
 app.use('/api/user', UserRouter)
 app.use('/api/cart', CartRouter)
 app.use('/api/order', OrderRouter)
-
-app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true }))
 
 http.createServer(app).listen(PORT, () => {
   console.log(`Server listen on port ${PORT}`)

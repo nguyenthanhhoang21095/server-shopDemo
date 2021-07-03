@@ -49,6 +49,7 @@ export default class CartServices {
     try {
       const { id, product, action = "increase" } = req.body;
       const data: any = await Cart.findOne({ id });
+      data.updateOne({})
       const cartArr = data.cart;
       let newCart: ICart[] = [];
       const prodIdx: number = cartArr.findIndex(
@@ -85,7 +86,6 @@ export default class CartServices {
           },
         ];
       }
-      console.log(newCart);
       
       await Cart.findOneAndUpdate(
         {
@@ -97,6 +97,8 @@ export default class CartServices {
           },
         }
       );
+
+      // data.UpdateOne => return new value
 
       const payload: any = await Cart.findOne({ id });
       

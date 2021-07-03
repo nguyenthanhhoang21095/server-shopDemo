@@ -49,7 +49,7 @@ export default class AuthServices {
       const resUserData = {
         id: payload.id,
         account: payload.account,
-        password: payload.password,
+        // password: payload.password,
         fullName: payload.fullName,
         phone: payload.phone,
         address: payload.address,
@@ -116,7 +116,7 @@ export default class AuthServices {
       const resUserData = {
         id: payload.id,
         account: payload.account,
-        password: payload.password,
+        // password: payload.password,
         fullName: payload.fullName,
         phone: payload.phone,
         address: payload.address,

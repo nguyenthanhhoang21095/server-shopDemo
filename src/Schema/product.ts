@@ -31,13 +31,14 @@ const ProductType = new GraphQLObjectType({
 })
 
 const queryType = new GraphQLObjectType({
-  name: 'Query',
+  name: 'query',
   fields: () => ({
     products: {
       type: new GraphQLList(ProductType),
       resolve: async () => {
         return await new Promise((resolve, reject) => {
           return Product.find({}, (err: boolean, products: any) => {
+            console.error(err)
             if (err) reject(err)
             else resolve(products)
           })
