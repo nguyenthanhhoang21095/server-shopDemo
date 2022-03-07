@@ -22,7 +22,9 @@ export default class CartServices {
 
   static async getCartInfo(id: number) {
     try {
-      const payload: any = await Cart.find({ id });
+      let payload:any;
+      payload = await Cart.findOne({ id });
+      if (!payload) payload = await CartServices.initNewCart(id);
       return payload;
     } catch (error) {
       throw Error("Fail to get cart");
@@ -42,52 +44,39 @@ export default class CartServices {
     }
   }
 
-  static async updateCart(
+  static async addToCart(
     req: Request,
     res: Response<ReponseType>
-  ): Promise<Response<ReponseType>> {
+  ):Promise<Response<ReponseType>> {
     try {
-      const { id, product, action = "increase" } = req.body;
-      const data: any = await Cart.findOne({ id });
-      data.updateOne({})
-      const cartArr = data.cart;
-      let newCart: ICart[] = [];
-      const prodIdx: number = cartArr.findIndex(
-        (elm: ICart) => elm.id === product.id
-      );
+      const { id, product } = req.body;
+      let newCart = [];
+      const { cart } : any = await CartServices.getCartInfo(id);
       
-      if (prodIdx != -1 && ((action === "decrease" && product.quantity <= 1) || action === "remove")
-      ) {
+      const prodIdx:number = cart.length
+        ? cart.findIndex((item:any) => item.id === product.id)
+        : -1;
+
+      if (prodIdx !== -1) {
         newCart = [
-          ...cartArr.slice(0, prodIdx),
-          ...cartArr.slice(prodIdx + 1, cartArr.length),
-        ];
-        
-      } else if (prodIdx != -1) {
-        
-        const quantity =
-          action === "decrease"
-            ? cartArr[prodIdx].quantity - 1
-            : cartArr[prodIdx].quantity + 1;
-        newCart = [
-          ...cartArr.slice(0, prodIdx),
+          ...cart.slice(0, prodIdx),
           {
             ...product,
-            quantity,
+            quantity: cart[prodIdx].quantity + 1,
           },
-          ...cartArr.slice(prodIdx + 1, cartArr.length),
-        ];
+          ...cart.slice(prodIdx + 1, cart.length),
+        ]
       } else {
         newCart = [
-          ...cartArr,
+          ...cart,
           {
             ...product,
             quantity: 1,
           },
-        ];
-      }
-      
-      await Cart.findOneAndUpdate(
+        ]
+      };
+
+      const updatedData: any = await Cart.findOneAndUpdate(
         {
           id,
         },
@@ -95,14 +84,113 @@ export default class CartServices {
           $set: {
             cart: newCart,
           },
+        }, {
+          new: true
+        }
+      );
+      // data.UpdateOne => return new value
+      return res.json({ success: true, data: updatedData });
+    } catch (error) {
+      return res.status(500);
+    }
+  }
+
+  static async removeFromCart(
+    req: Request,
+    res: Response<ReponseType>
+  ):Promise<Response<ReponseType>> {
+    try {
+      const { id, product } = req.body;
+      let newCart:any[] = [];
+      const { cart } : any = await CartServices.getCartInfo(id);
+      
+      const prodIdx:number = cart.length
+        ? cart.findIndex((item:any) => item.id === product.id)
+        : -1;
+      
+      if (prodIdx === -1) return res.json({ success: true, data: cart });
+
+      newCart = [
+        ...cart.slice(0, prodIdx),
+        ...cart.slice(prodIdx + 1, cart.length),
+      ]
+      const updatedData: any = await Cart.findOneAndUpdate(
+        {
+          id,
+        },
+        {
+          $set: {
+            cart: newCart,
+          },
+        }, {
+          new: true
+        }
+      );
+      // data.UpdateOne => return new value
+      return res.json({ success: true, data: updatedData });
+    } catch (error) {
+      return res.status(500);
+    }
+  }
+
+  static async updateCart(
+    req: Request,
+    res: Response<ReponseType>
+  ): Promise<Response<ReponseType>> {
+    try {
+      const { id, product, action = "" } = req.body;
+      const { cart }: any = await CartServices.getCartInfo(id);;
+      let newCart: ICart[] = [];
+      const prodIdx: number = cart.length
+      ? cart.findIndex((item:any) => item.id === product.id)
+      : -1;
+      
+      if (prodIdx != -1 && ((action === "decrease" &&  cart[prodIdx].quantity <= 1) || action === "remove")
+      ) {
+        newCart = [
+          ...cart.slice(0, prodIdx),
+          ...cart.slice(prodIdx + 1, cart.length),
+        ]
+        
+      } else if (prodIdx != -1) {
+        const newQuantity =
+          action === "decrease"
+            ? cart[prodIdx].quantity - 1
+            : cart[prodIdx].quantity + 1;
+        
+        newCart = [
+          ...cart.slice(0, prodIdx),
+          {
+            ...product,
+            quantity: newQuantity,
+          },
+          ...cart.slice(prodIdx + 1, cart.length),
+        ];
+      } else {
+        newCart = [
+          ...cart,
+          {
+            ...product,
+            quantity: 1,
+          },
+        ];
+      }
+      
+      const updatedData:any = await Cart.findOneAndUpdate(
+        {
+          id,
+        },
+        {
+          $set: {
+            cart: newCart,
+          },
+        }, {
+          new: true
         }
       );
 
       // data.UpdateOne => return new value
-
-      const payload: any = await Cart.findOne({ id });
-      
-      return res.json({ success: true, data: payload });
+      return res.json({ success: true, data: updatedData });
     } catch (error) {
       return res.status(500);
     }

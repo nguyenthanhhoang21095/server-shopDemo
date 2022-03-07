@@ -28,7 +28,36 @@ export default class ProductServices {
   ): Promise<Response<ReponseType>> {
     try {
       const id: number = parseInt(req.params.id)
-      const payload: any = await Product.findOne({ id })
+      const payload: any = await Product.findOne({ id });
+      return res.json({ success: true, data: payload })
+    } catch (error) {
+      return res.status(500)
+    }
+  }
+
+  static async getRelatedById (
+    req: Request,
+    res: Response<ReponseType>
+  ): Promise<Response<ReponseType>> {
+    try {
+      const id: number = parseInt(req.params.id)
+      const payload: any = await Product.aggregate([
+        { $match: { 
+            id 
+          } 
+        },
+        { 
+          $lookup:{
+            from: 'products',
+            localField: 'related_products',
+            foreignField: 'id',
+            as: 'related_products'
+          }
+        },
+        {
+          $project: { "related_products": 1}
+        }
+      ])
       return res.json({ success: true, data: payload })
     } catch (error) {
       return res.status(500)
@@ -43,10 +72,23 @@ export default class ProductServices {
       let prodId = 0;
       const {
         name,
-        image,
+        images,
+        image_cover,
+        image_thumb,
         price,
-        finalPrice,
-      }: Partial<IProduct> = req.body
+        salePrice,
+        brand,
+        featured_brand,
+        material,
+        product_code,
+        rateStar,
+        availability,
+        colors,
+        sizes,
+        reviews,
+        related_products,
+        description
+      }: IProduct = req.body
 
       const prodList: any = await Product.find({})
       if (prodList.length) prodId = prodList.length;
@@ -54,11 +96,22 @@ export default class ProductServices {
       const payload: any = await Product.create({
         id: prodId,
         name,
-        image,
+        images,
+        image_cover,
+        image_thumb,
         price,
-        inStock: true,
-        isActive: true,
-        finalPrice
+        salePrice,
+        brand,
+        featured_brand,
+        material,
+        product_code,
+        rateStar,
+        availability,
+        colors,
+        sizes,
+        reviews,
+        related_products,
+        description
       })
 
       // saveStorage(`${id}`, payload)
@@ -77,22 +130,41 @@ export default class ProductServices {
       const {
         id,
         name,
-        image,
+        images,
+        image_cover,
+        image_thumb,
         price,
-        finalPrice,
-        percentStar,
-        inStock,
-        isActive
+        salePrice,
+        brand,
+        featured_brand,
+        material,
+        product_code,
+        rateStar,
+        availability,
+        colors,
+        sizes,
+        reviews,
+        related_products
       }: IProduct = req.body
 
       await Product.findOneAndUpdate({ id }, {
+        id,
         name,
-        image,
+        images,
+        image_cover,
+        image_thumb,
         price,
-        finalPrice,
-        percentStar,
-        inStock,
-        isActive
+        salePrice,
+        brand,
+        featured_brand,
+        material,
+        product_code,
+        rateStar,
+        availability,
+        colors,
+        sizes,
+        reviews,
+        related_products
       })
       const payload = await Product.find();
       return res.json({ success: true, data: payload })

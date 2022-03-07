@@ -6,5 +6,6 @@ export const defaultModel = {
   number: { type: Number, default: 0 },
   boolean: { type: Boolean, default: true },
   booleanFalse: { type: Boolean, default: false },
-  object: { type: Object, default: {} }
+  object: { type: Object, default: {} },
+  null: { type: null, default: null }
 }

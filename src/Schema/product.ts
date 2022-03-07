@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLSchema,
   GraphQLBoolean,
+  GraphQLFloat,
   GraphQLList,
   GraphQLInt
 } from 'graphql'
@@ -13,20 +14,59 @@ const ProductType = new GraphQLObjectType({
   name: 'Product',
   fields: () => ({
     id: {
-      type: GraphQLString
+      type: GraphQLInt
     },
     name: {
       type: GraphQLString
     },
-    image: {
+    images: {
+      type: GraphQLString
+    },
+    image_cover: {
+      type: GraphQLString
+    },
+    image_thumb: {
       type: GraphQLString
     },
     price: {
+      type: GraphQLFloat,
+    },
+    salePrice: {
+      type: GraphQLFloat,
+    },
+    brand: {
+      type: GraphQLString
+    },
+    featured_brand: {
+      type: GraphQLString
+    },
+    material: {
+      type: GraphQLString
+    },
+    product_code: {
+      type: GraphQLString
+    },
+    rateStar: {
       type: GraphQLInt
     },
-    finalPrice: {
-      type: GraphQLInt
-    }
+    availability: {
+      type: GraphQLBoolean
+    },
+    colors: {
+      type: GraphQLString
+    },
+    sizes: {
+      type: GraphQLString
+    },
+    reviews: {
+      type: GraphQLString
+    },
+    related_products: {
+      type: GraphQLString
+    },
+    description: {
+      type: GraphQLString
+    },
   })
 })
 
