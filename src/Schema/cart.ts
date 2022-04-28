@@ -5,6 +5,7 @@ import {
     GraphQLList,
 } from 'graphql'
 import { Cart } from '../model/index'
+import { ProductType } from "./product"
 
 const CartType = new GraphQLObjectType({
     name: 'Cart',
@@ -13,7 +14,7 @@ const CartType = new GraphQLObjectType({
             type: GraphQLString
         },
         cart: {
-            type: GraphQLString
+            type: GraphQLList(ProductType)
         }
     })
 })

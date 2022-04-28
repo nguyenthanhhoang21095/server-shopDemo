@@ -55,6 +55,14 @@ export default class CategoryServices {
             id 
           } 
         },
+        { $lookup:
+          {
+            from: 'subCategory',
+            localField: 'subCategory',
+            foreignField: 'id',
+            as: 'subCategory'
+          }
+        },
         // { $lookup:
         //   {
         //     from: 'products',

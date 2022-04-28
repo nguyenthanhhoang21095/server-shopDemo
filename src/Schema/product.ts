@@ -1,5 +1,4 @@
 import {
-  GraphQLID,
   GraphQLObjectType,
   GraphQLString,
   GraphQLSchema,
@@ -10,7 +9,7 @@ import {
 } from 'graphql'
 import { Product } from '../model/index'
 
-const ProductType = new GraphQLObjectType({
+export const ProductType = new GraphQLObjectType({
   name: 'Product',
   fields: () => ({
     id: {

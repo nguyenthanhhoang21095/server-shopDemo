@@ -47,10 +47,10 @@ export default class CartServices {
   static async addToCart(
     req: Request,
     res: Response<ReponseType>
-  ):Promise<Response<ReponseType>> {
+  ): Promise<Response<ReponseType>> {
     try {
-      const { id, product } = req.body;
-      let newCart = [];
+      const { id, product, option: { specificQty = 0, size = {}, color = {} }} = req.body;
+      let newCart:any[] = [];
       const { cart } : any = await CartServices.getCartInfo(id);
       
       const prodIdx:number = cart.length
@@ -58,20 +58,36 @@ export default class CartServices {
         : -1;
 
       if (prodIdx !== -1) {
-        newCart = [
-          ...cart.slice(0, prodIdx),
-          {
-            ...product,
-            quantity: cart[prodIdx].quantity + 1,
-          },
-          ...cart.slice(prodIdx + 1, cart.length),
-        ]
+        if (cart[prodIdx].color.name == color.name && cart[prodIdx].size.name == size.name) {
+          newCart = [
+            ...cart.slice(0, prodIdx),
+            {
+              ...cart[prodIdx],
+              quantity: cart[prodIdx].quantity + (specificQty || 1),
+              size,
+              color
+            },
+            ...cart.slice(prodIdx + 1, cart.length)
+          ]
+        } else {
+          newCart = [
+            ...cart,
+            {
+              ...cart[prodIdx],
+              quantity: specificQty || 1,
+              size,
+              color
+            },
+          ]
+        }
       } else {
         newCart = [
           ...cart,
           {
             ...product,
-            quantity: 1,
+            quantity: specificQty || 1,
+            size,
+            color
           },
         ]
       };
@@ -139,7 +155,7 @@ export default class CartServices {
   ): Promise<Response<ReponseType>> {
     try {
       const { id, product, action = "" } = req.body;
-      const { cart }: any = await CartServices.getCartInfo(id);;
+      const { cart }: any = await CartServices.getCartInfo(id);
       let newCart: ICart[] = [];
       const prodIdx: number = cart.length
       ? cart.findIndex((item:any) => item.id === product.id)

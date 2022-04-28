@@ -13,5 +13,5 @@ export default {
     BannerSchema, 
     CategorySchema, 
     SubCategorySchema,
-    FeatureSchema
+    FeatureSchema,
 }

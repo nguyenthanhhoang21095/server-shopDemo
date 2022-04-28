@@ -13,6 +13,7 @@ import BannerRouter from './routes/Banner'
 import CategoryRouter from './routes/Category'
 import SubCategoryRouter from './routes/subCategory'
 import FeatureRouter from './routes/Feature'
+import SearchRouter from './routes/Search'
 import { connectDatabase } from './common/connectDatabase'
 import { graphqlHTTP } from 'express-graphql'
 import ProductSchema from './Schema/product'
@@ -54,6 +55,7 @@ app.use('/api/banner', BannerRouter)
 app.use('/api/category', CategoryRouter)
 app.use('/api/sub-category', SubCategoryRouter)
 app.use('/api/feature', FeatureRouter)
+app.use('/api/search', SearchRouter)
 
 app.use('/api/graphql', graphqlHTTP({ schema: ProductSchema, pretty: true }))
 app.use('/api/user', UserRouter)
